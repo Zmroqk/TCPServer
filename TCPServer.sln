@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCPServer", "TCPSERVER\TCPServer.csproj", "{2011B45F-26AF-4916-8F8F-BEF6249C5EAE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FE3922C4-1EAD-46B6-96AD-5FEFF1C6851B} = {FE3922C4-1EAD-46B6-96AD-5FEFF1C6851B}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCPDll", "TCPDLL\TCPDll.csproj", "{FE3922C4-1EAD-46B6-96AD-5FEFF1C6851B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCPClientGUI", "TCPCLIENTGUI\TCPClientGUI.csproj", "{2C4CAD3F-A2ED-435D-8228-7AF3F0259F19}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2011B45F-26AF-4916-8F8F-BEF6249C5EAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2011B45F-26AF-4916-8F8F-BEF6249C5EAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2011B45F-26AF-4916-8F8F-BEF6249C5EAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2011B45F-26AF-4916-8F8F-BEF6249C5EAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE3922C4-1EAD-46B6-96AD-5FEFF1C6851B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE3922C4-1EAD-46B6-96AD-5FEFF1C6851B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE3922C4-1EAD-46B6-96AD-5FEFF1C6851B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE3922C4-1EAD-46B6-96AD-5FEFF1C6851B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C4CAD3F-A2ED-435D-8228-7AF3F0259F19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C4CAD3F-A2ED-435D-8228-7AF3F0259F19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C4CAD3F-A2ED-435D-8228-7AF3F0259F19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C4CAD3F-A2ED-435D-8228-7AF3F0259F19}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D528B9F1-5B69-4BC3-A3E7-C9FE3BF4C3A7}
+	EndGlobalSection
+EndGlobal

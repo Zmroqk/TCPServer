@@ -1,0 +1,307 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TCPDll</name>
+    </assembly>
+    <members>
+        <member name="M:TCPDll.ByteArrayExtension.FillHeader(System.Byte[],System.Char,System.Int32)">
+            <summary>
+            Fill array with necessary header data
+            </summary>
+             /// <param name="data">Data array to fill data with</param>
+            <param name="PacketType">Package type to set</param>
+            <param name="operationId">Operation id to set</param>
+        </member>
+        <member name="M:TCPDll.ByteArrayExtension.FillData(System.Byte[],System.Byte[]@,System.Int32,System.Int32)">
+            <summary>
+            Fill array with data with given offset and length
+            </summary>
+            <param name="data">Data array to fill data with</param>
+            <param name="dataToFillWith">Data used to fill</param>
+            <param name="offset">Offset to use when filling data</param>
+            <param name="lengthToFill">Number of bytes to fill</param>
+        </member>
+        <member name="M:TCPDll.ByteArrayExtension.FillData(System.Byte[],System.Byte[]@)">
+            <summary>
+            Fill array with data
+            </summary>
+            <param name="data">Data array to fill data with</param>
+            <param name="dataToFillWith">Data used to fill</param>
+        </member>
+        <member name="M:TCPDll.ByteArrayExtension.Fill(System.Byte[],System.Char,System.Int32,System.Byte[]@)">
+            <summary>
+            Fill array with data
+            </summary>
+            <param name="data">Array to fill</param>
+            <param name="PacketType">Package type to set</param>
+            <param name="operationId">Operation id to set</param>
+            <param name="dataToFillWith">Data used to fill</param>
+        </member>
+        <member name="T:TCPDll.Headers">
+            <summary>
+            Definitions for headers
+            </summary>
+        </member>
+        <member name="F:TCPDll.Headers.HeaderSize">
+            <summary>
+            Every package header size
+            </summary>
+        </member>
+        <member name="F:TCPDll.Headers.BufferSize">
+            <summary>
+            Package size
+            </summary>
+        </member>
+        <member name="F:TCPDll.Headers.SizeDifferential">
+            <summary>
+            Difference in size: BufferSize - HeaderSize
+            </summary>
+        </member>
+        <member name="F:TCPDll.Headers.HeaderContent">
+            <summary>
+            Header, Content-type
+            </summary>
+        </member>
+        <member name="F:TCPDll.Headers.HeaderDataLength">
+            <summary>
+            Header, Data-Length
+            </summary>
+        </member>
+        <member name="F:TCPDll.Headers.HeaderOperationId">
+            <summary>
+            Header, Operation-ID
+            </summary>
+        </member>
+        <member name="F:TCPDll.Headers.HeaderOperationType">
+            <summary>
+            Header, Operation-Type
+            </summary>
+        </member>
+        <member name="F:TCPDll.Headers.TypeString">
+            <summary>
+            Content type, type username
+            </summary>
+        </member>
+        <member name="F:TCPDll.Headers.TypeCreateOperation">
+            <summary>
+            Content type, type create-operation
+            </summary>
+        </member>
+        <member name="F:TCPDll.Headers.TypeEndOperation">
+            <summary>
+            Content type, type create-operation
+            </summary>
+        </member>
+        <member name="F:TCPDll.Headers.TypeFile">
+            <summary>
+            Content type, type file
+            </summary>
+        </member>
+        <member name="F:TCPDll.Headers.TypeProceed">
+            <summary>
+            Content type, proceed
+            </summary>
+        </member>
+        <member name="F:TCPDll.Headers.OperationTypeGetUsername">
+            <summary>
+            Operation type, Get-Username
+            </summary>
+        </member>
+        <member name="F:TCPDll.Headers.OperationTypeSendFile">
+            <summary>
+            Operation type, Send-File
+            </summary>
+        </member>
+        <member name="F:TCPDll.Headers.PacketTypeHeader">
+            <summary>
+            Package type: Header
+            </summary>
+        </member>
+        <member name="F:TCPDll.Headers.PacketTypeData">
+            <summary>
+            Package type: Data
+            </summary>
+        </member>
+        <member name="M:TCPDll.Headers.CreateHeader(System.Int32,System.String)">
+            <summary>
+            Create header data
+            </summary>
+            <param name="operationId">Operation id</param>
+            <param name="headerString">Header string</param>
+            <returns></returns>
+        </member>
+        <member name="M:TCPDll.Headers.CreateDataPacket(System.IO.FileStream,System.Int32)">
+            <summary>
+            Create data packet from filestream
+            </summary>
+            <param name="fileStream">Filestream to use</param>
+            <param name="OperationId">Operation id for header</param>
+            <returns></returns>
+        </member>
+        <member name="M:TCPDll.Headers.FillHeader(System.Byte[]@,System.Char,System.Int32)">
+            <summary>
+            Fill array with necessary header data
+            </summary>
+            <param name="data">Data array to fill data with</param>
+            <param name="PacketType">Package type to set</param>
+            <param name="operationId">Operation id to set</param>
+        </member>
+        <member name="M:TCPDll.Headers.FillData(System.Byte[]@,System.Byte[]@)">
+            <summary>
+            Fill array with data
+            </summary>
+            <param name="data">Data array to fill data with</param>
+            <param name="dataToFillWith">Data used to fill</param>
+        </member>
+        <member name="M:TCPDll.Headers.FillData(System.Byte[]@,System.Byte[]@,System.Int32,System.Int32)">
+            <summary>
+            Fill array with data with given offset and length
+            </summary>
+            <param name="data">Data array to fill data with</param>
+            <param name="dataToFillWith">Data used to fill</param>
+            <param name="offset">Offset to use when filling data</param>
+            <param name="lengthToFill">Number of bytes to fill</param>
+        </member>
+        <member name="M:TCPDll.Headers.Fill(System.Byte[]@,System.Char,System.Int32,System.Byte[]@)">
+            <summary>
+            Fill array with data
+            </summary>
+            <param name="data">Array to fill</param>
+            <param name="PacketType">Package type to set</param>
+            <param name="operationId">Operation id to set</param>
+            <param name="dataToFillWith">Data used to fill</param>
+        </member>
+        <member name="T:TCPDll.Operation">
+            <summary>
+            Operation definition class
+            </summary>
+        </member>
+        <member name="P:TCPDll.Operation.ID">
+            <summary>
+            Id of operation
+            </summary>
+        </member>
+        <member name="P:TCPDll.Operation.OperationTask">
+            <summary>
+            Operation incoming
+            </summary>
+        </member>
+        <member name="T:TCPDll.User">
+            <summary>
+            TCP user class
+            </summary>
+        </member>
+        <member name="E:TCPDll.User.onNewOperation">
+            <summary>
+            When new operation occurs
+            </summary>
+        </member>
+        <member name="E:TCPDll.User.onClientDisconnection">
+            <summary>
+            When client disconnects
+            </summary>
+        </member>
+        <member name="P:TCPDll.User.Client">
+            <summary>
+            TCP client socket
+            </summary>
+        </member>
+        <member name="P:TCPDll.User.Username">
+            <summary>
+            User name
+            </summary>
+        </member>
+        <member name="P:TCPDll.User.Operations">
+            <summary>
+            List of operations
+            </summary>
+        </member>
+        <member name="F:TCPDll.User.data">
+            <summary>
+            Current downloaded data
+            </summary>
+        </member>
+        <member name="M:TCPDll.User.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="M:TCPDll.User.StartReceiveData">
+            <summary>
+            Begin receiving data 
+            </summary>
+        </member>
+        <member name="M:TCPDll.User.GenerateOperationId">
+            <summary>
+            Generete new operation id for this user
+            </summary>
+            <returns>Available operation id</returns>
+        </member>
+        <member name="M:TCPDll.User.ClearBuffer">
+            <summary>
+            Clear buffer data
+            </summary>
+        </member>
+        <member name="M:TCPDll.User.BeginReceive">
+            <summary>
+            Begin receiving data
+            </summary>
+        </member>
+        <member name="M:TCPDll.User.ProcessData(TCPDll.Operation)">
+            <summary>
+            Process data as raw data
+            </summary>
+            <param name="operation">Operation to which data belongs</param>
+        </member>
+        <member name="M:TCPDll.User.ProcessHeaderData(System.Int32,TCPDll.Operation)">
+            <summary>
+            Process datrra as header data
+            </summary>
+            <param name="dataReceived">Size of data received</param>
+            <param name="operation">Operation to which data belongs</param>
+        </member>
+        <member name="M:TCPDll.User.DataReceived(System.IAsyncResult)">
+            <summary>
+            Process received data
+            </summary>
+            <param name="asyncResult">Result of BeginReceive()</param>
+        </member>
+        <member name="T:IClientOperation">
+            <summary>
+            Incoming operations
+            </summary>
+        </member>
+        <member name="M:IClientOperation.Init">
+            <summary>
+            Init operation
+            </summary>
+        </member>
+        <member name="M:IClientOperation.SendHeader">
+            <summary>
+            Send header to target
+            </summary>
+        </member>
+        <member name="M:IClientOperation.SendData">
+            <summary>
+            Send data to target
+            </summary>
+        </member>
+        <member name="M:IClientOperation.PutHeader(System.Collections.Generic.Dictionary{System.String,System.String}@)">
+            <summary>
+            Process header data
+            </summary>
+            <param name="headers">Incoming headers</param>
+        </member>
+        <member name="M:IClientOperation.PutData(System.Byte[])">
+            <summary>
+            Process data 
+            </summary>
+            <param name="data">Incoming data</param>
+        </member>
+        <member name="M:IClientOperation.EndOperation">
+            <summary>
+            End operation
+            </summary>
+        </member>
+    </members>
+</doc>

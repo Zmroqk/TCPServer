@@ -1,0 +1,18 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="TCPClientGUI.MainWindow"
+        Title="TCPClientGUI" Background="Gray" Width="800" Height="400">
+  <Panel Width="800" Height="400">
+    <StackPanel Height="400" Width="200" Background="Gray" HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="{Binding !ConnectionStatus}">
+      <TextBox Watermark="Username" Name="TxbUsername" Text="{Binding Username}"/>
+      <TextBox Text="192.168.1.4" Name="TxbAddress"/>
+      <Button Content="{Binding ConnectionString}" Click="Button_Connect" IsEnabled="{Binding !ConnectionStatus}"/>
+    </StackPanel>
+    <StackPanel Height="400" Width="200" Background="Gray" HorizontalAlignment="Right" VerticalAlignment="Top" IsVisible="{Binding ConnectionStatus}">
+      <Button Content="Send file to server" Click="SendFileButton_Click"/>
+    </StackPanel>
+  </Panel>
+</Window>
