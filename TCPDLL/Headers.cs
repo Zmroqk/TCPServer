@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using TCPDll.Exceptions;
+using TCPDll.Tools.Extensions;
 
 namespace TCPDll
 {

@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading;
 using TCPDll.Exceptions;
 
-namespace TCPDll
+namespace TCPDll.Tools.Extensions
 {
     public static class ByteArrayExtension
     {

@@ -3,7 +3,7 @@
 /// <summary>
 /// Incoming operations
 /// </summary>
-public interface IClientOperation
+public interface IOperation
 {
     /// <summary>
     /// Init operation

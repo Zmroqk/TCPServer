@@ -16,6 +16,6 @@ namespace TCPDll
         /// <summary>
         /// Operation incoming
         /// </summary>
-        public IClientOperation OperationTask { get; set; }
+        public IOperation OperationTask { get; set; }
     }
 }

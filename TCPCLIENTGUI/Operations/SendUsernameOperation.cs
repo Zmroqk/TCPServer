@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using TCPDll;
+using TCPDll.Tools.Extensions;
 
 namespace TCPClientGUI.Operations
 {
-    public class SendUsernameOperation : IClientOperation
+    public class SendUsernameOperation : IOperation
     {
         User User { get; set; }
         int OperationId { get; set; }
@@ -29,16 +30,18 @@ namespace TCPClientGUI.Operations
                 {
                     data = new byte[Headers.BufferSize];
                     data.FillHeader(Headers.PacketTypeData, OperationId);
+                    data.FillData(ref username, dataAlreadySend, Headers.SizeDifferential);
                     //Headers.FillHeader(ref data, Headers.PacketTypeData, OperationId);
-                    Headers.FillData(ref data, ref username, dataAlreadySend, Headers.SizeDifferential);
+                    //Headers.FillData(ref data, ref username, dataAlreadySend, Headers.SizeDifferential);
                     dataAlreadySend += Headers.SizeDifferential;
                     User.ClientSocket.Send(data);
                 }
             }
             data = new byte[username.Length - dataAlreadySend + Headers.HeaderSize];
             data.FillHeader(Headers.PacketTypeData, OperationId);
+            data.FillData(ref username, dataAlreadySend, username.Length - dataAlreadySend);
             //Headers.FillHeader(ref data, Headers.PacketTypeData, OperationId);
-            Headers.FillData(ref data, ref username, dataAlreadySend, username.Length-dataAlreadySend);
+            //Headers.FillData(ref data, ref username, dataAlreadySend, username.Length-dataAlreadySend);
             User.ClientSocket.Send(data);         
         }
         
@@ -48,7 +51,8 @@ namespace TCPClientGUI.Operations
                $"{Headers.HeaderDataLength}: {Encoding.UTF8.GetBytes(Username).Length}";
             byte[] header = new byte[Headers.BufferSize];        
             byte[] headerStringBytes = Encoding.UTF8.GetBytes(headerString);
-            Headers.Fill(ref header, Headers.PacketTypeHeader, OperationId, ref headerStringBytes);
+            header.Fill(Headers.PacketTypeHeader, OperationId, ref headerStringBytes);
+            //Headers.Fill(ref header, Headers.PacketTypeHeader, OperationId, ref headerStringBytes);
             User.ClientSocket.Send(header);
         }
 

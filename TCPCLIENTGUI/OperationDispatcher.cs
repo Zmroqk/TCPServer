@@ -26,7 +26,7 @@ namespace TCPClientGUI
                 string operationType = Headers[TCPDll.Headers.HeaderOperationType];
                 operationType = operationType.Replace("\0","");
                 int operationId = int.Parse(Headers[TCPDll.Headers.HeaderOperationId]);
-                IClientOperation clientOperation = null;
+                IOperation clientOperation = null;
                 switch (operationType)
                 {
                     case TCPDll.Headers.OperationTypeGetUsername:

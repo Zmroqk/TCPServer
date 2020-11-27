@@ -36,6 +36,16 @@ namespace TCPDll.Server
         public event EventHandler<ClientDisconnectedEventArgs> ClientDisconnected;
 
         /// <summary>
+        /// Ocurrs when one of operations sends message
+        /// </summary>
+        public event EventHandler<OperationMessageEventArgs> OperationMessage;
+
+        /// <summary>
+        /// Ocurrs when one of operations sends message
+        /// </summary>
+        public event EventHandler<ServerMessageEventArgs> ServerMessage;
+
+        /// <summary>
         /// Default constructor
         /// </summary>
         public Server()
@@ -61,6 +71,7 @@ namespace TCPDll.Server
 
         /// <summary>
         /// Initialise server
+        /// <error-code>1</error-code>
         /// </summary>
         public void InitServer(IPAddress ipAddress, int port)
         {
@@ -69,6 +80,7 @@ namespace TCPDll.Server
                 ServerSocket = new TcpListener(ipAddress, port);
                 ServerSocket.Start();
                 ServerSocket.BeginAcceptTcpClient(ConnectUser, null);
+                ServerMessage?.Invoke(this, new ServerMessageEventArgs(this, $"Server TCP started at: {ipAddress}:{port}\n" + $"Server version v0.1.1"));
             }
             catch(Exception e)
             {
@@ -111,7 +123,7 @@ namespace TCPDll.Server
             int Id = newUser.GenerateOperationId();
             Task newOperation = new Task(() =>
                {
-                   IClientOperation operation = new ClientDataOperation(newUser, Id);
+                   IOperation operation = new ClientDataOperation(newUser, Id);
                    operation.Init();
                    newUser.Operations.Add(new Operation()
                    {
@@ -123,9 +135,14 @@ namespace TCPDll.Server
             Clients.Add(newUser);
         }
 
+        /// <summary>
+        /// On client new operation request
+        /// </summary>
+        /// <param name="sender">User that has send request</param>
+        /// <param name="e">Headers for request</param>
         private void NewUser_onNewOperation(object sender, Dictionary<string, string> e)
         {
-            OperationDispatcher operationDispatcher = new OperationDispatcher((User)sender, e);
+            OperationDispatcher operationDispatcher = new OperationDispatcher((User)sender, e, OperationMessage);
             operationDispatcher.Dispatch();
         }
 

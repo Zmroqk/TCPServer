@@ -8,7 +8,7 @@
             <summary>
             Fill array with necessary header data
             </summary>
-             /// <param name="data">Data array to fill data with</param>
+            <param name="data">Data array to fill data with</param>
             <param name="PacketType">Package type to set</param>
             <param name="operationId">Operation id to set</param>
         </member>
@@ -186,6 +186,119 @@
             Operation incoming
             </summary>
         </member>
+        <member name="T:TCPDll.Server.Operations.ClientDataOperation">
+            <summary>
+            GET user data (username) SERVER SIDE
+            </summary>
+        </member>
+        <member name="P:TCPDll.Server.Operations.ClientDataOperation.User">
+            <summary>
+            User for this operation
+            </summary>
+        </member>
+        <member name="P:TCPDll.Server.Operations.ClientDataOperation.UsernameLength">
+            <summary>
+            Username string length
+            </summary>
+        </member>
+        <member name="P:TCPDll.Server.Operations.ClientDataOperation.OperationId">
+            <summary>
+            Operation id
+            </summary>
+        </member>
+        <member name="P:TCPDll.Server.Operations.ClientDataOperation.stringBuilder">
+            <summary>
+            String builder for this operation
+            </summary>
+        </member>
+        <member name="M:TCPDll.Server.Operations.ClientDataOperation.#ctor(TCPDll.User,System.Int32)">
+            <summary>
+            Default constructor
+            </summary>
+            <param name="user">User for this opearion</param>
+            <param name="operationId">Operation id of this operation</param>
+        </member>
+        <member name="M:TCPDll.Server.Operations.ClientDataOperation.Init">
+            <summary>
+            Init this operation, Send header Create-Operation
+            </summary>
+        </member>
+        <member name="M:TCPDll.Server.Operations.ClientDataOperation.PutHeader(System.Collections.Generic.Dictionary{System.String,System.String}@)">
+            <summary>
+            Get header with data
+            </summary>
+            <param name="headers">Headers for this operation</param>
+        </member>
+        <member name="M:TCPDll.Server.Operations.ClientDataOperation.PutData(System.Byte[])">
+            <summary>
+            Get data
+            </summary>
+            <param name="data">Data for this operation</param>
+        </member>
+        <member name="M:TCPDll.Server.Operations.ClientDataOperation.EndOperation">
+            <summary>
+            End opeartion by sending End-Operation
+            </summary>
+        </member>
+        <member name="T:TCPDll.Server.Server">
+            <summary>
+            Server class
+            </summary>
+        </member>
+        <member name="P:TCPDll.Server.Server.ServerSocket">
+            <summary>
+            Tcp listener socket
+            </summary>
+        </member>
+        <member name="P:TCPDll.Server.Server.Clients">
+            <summary>
+            Connected clients
+            </summary>
+        </member>
+        <member name="E:TCPDll.Server.Server.ServerClosed">
+            <summary>
+            Ocurrs when server closes
+            </summary>
+        </member>
+        <member name="E:TCPDll.Server.Server.ClientDisconnected">
+            <summary>
+            Ocurrs when client disconnects
+            </summary>
+        </member>
+        <member name="M:TCPDll.Server.Server.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="M:TCPDll.Server.Server.GetAvailableAddresses">
+            <summary>
+            Get all available IPAddresses
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCPDll.Server.Server.InitServer(System.Net.IPAddress,System.Int32)">
+            <summary>
+            Initialise server
+            </summary>
+        </member>
+        <member name="M:TCPDll.Server.Server.CloseServer">
+            <summary>
+            Close server connections
+            </summary>
+        </member>
+        <member name="M:TCPDll.Server.Server.ConnectUser(System.IAsyncResult)">
+            <summary>
+            On user connection
+            </summary>
+            <param name="asyncResult"></param>
+        </member>
+        <member name="M:TCPDll.Server.Server.OnClientDisconnect(System.Object,System.String)">
+            <summary>
+            Handle client disconnection
+            </summary>
+            <param name="sender">User that disconnected</param>
+            <param name="message">Cause of disconnection</param>
+        </member>
         <member name="T:TCPDll.User">
             <summary>
             TCP user class
@@ -201,9 +314,19 @@
             When client disconnects
             </summary>
         </member>
+        <member name="E:TCPDll.User.ClientError">
+            <summary>
+            When client occurs on error
+            </summary>
+        </member>
         <member name="P:TCPDll.User.Client">
             <summary>
-            TCP client socket
+            TCP client
+            </summary>
+        </member>
+        <member name="P:TCPDll.User.ClientSocket">
+            <summary>
+            Tcp client socket
             </summary>
         </member>
         <member name="P:TCPDll.User.Username">
@@ -276,16 +399,6 @@
             Init operation
             </summary>
         </member>
-        <member name="M:IClientOperation.SendHeader">
-            <summary>
-            Send header to target
-            </summary>
-        </member>
-        <member name="M:IClientOperation.SendData">
-            <summary>
-            Send data to target
-            </summary>
-        </member>
         <member name="M:IClientOperation.PutHeader(System.Collections.Generic.Dictionary{System.String,System.String}@)">
             <summary>
             Process header data
@@ -297,11 +410,6 @@
             Process data 
             </summary>
             <param name="data">Incoming data</param>
-        </member>
-        <member name="M:IClientOperation.EndOperation">
-            <summary>
-            End operation
-            </summary>
         </member>
     </members>
 </doc>

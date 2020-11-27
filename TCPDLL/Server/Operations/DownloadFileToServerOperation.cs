@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 using TCPDll;
 using System.Timers;
 using TCPDll.Tools;
+using TCPDll.Server.EventArgs;
 
 namespace TCPDll.Server.Operations
 {
-    public class DownloadFileToServerOperation : IClientOperation
+    public class DownloadFileToServerOperation : IOperation
     {
         User User { get; set; }
         int OperationId { get; set; }
@@ -22,9 +23,10 @@ namespace TCPDll.Server.Operations
         FileStream FileStream { get; set; }
         FileDownloader FileDownloader { get; set; }
         StringBuilder FilenameBuilder { get; set; }
+        EventHandler<OperationMessageEventArgs> MessageHandler { get; set; }
         //Timer TimerForDebugInfo { get; set; }
 
-        public DownloadFileToServerOperation(User user, int operationId)
+        public DownloadFileToServerOperation(User user, int operationId, EventHandler<OperationMessageEventArgs> messageHandler = null)
         {
             User = user;
             OperationId = operationId;
@@ -33,7 +35,8 @@ namespace TCPDll.Server.Operations
             ExpectedFilenameDownloadSize = 0;
             OperationStep = 0;
             Filename = "";
-            FilenameBuilder = new StringBuilder();        
+            FilenameBuilder = new StringBuilder();
+            MessageHandler = messageHandler;
         }
 
         public void EndOperation()
@@ -135,10 +138,16 @@ namespace TCPDll.Server.Operations
                 directoryInfo.Create();
             FileDownloader = new FileDownloader(directoryPath + Filename, ExpectedDownloadSize);
             FileDownloader.FileDownloaded += FileDownloader_FileDownloaded;
+            FileDownloader.PropertyChanged += FileDownloader_PropertyChanged;
             FileDownloader.Init();
         }
 
-        private void FileDownloader_FileDownloaded(object sender, EventArgs.FileDownloadEventArgs e)
+        private void FileDownloader_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            MessageHandler?.Invoke(this, new OperationMessageEventArgs(this, FileDownloader.DownloadSpeed.ToString("F3")));
+        }
+
+        private void FileDownloader_FileDownloaded(object sender, FileDownloadEventArgs e)
         {
             FileDownloader.Dispose();
             EndOperation();

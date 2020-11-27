@@ -39,7 +39,25 @@ namespace TCPServer
             }
             while (!int.TryParse(MultithreadConsole.ReadLine(), out index) || index <= 0 || index > ips.Length) { }
             serverCommandsTask.Start();
+            Server.ClientDisconnected += Server_ClientDisconnected;
+            Server.OperationMessage += Server_OperationMessage;
+            Server.ServerMessage += Server_ServerMessage;
             return ips[index - 1];          
+        }
+
+        private void Server_ServerMessage(object sender, TCPDll.Server.EventArgs.ServerMessageEventArgs e)
+        {
+            MultithreadConsole.WriteLine($"Server: {e.Message}");
+        }
+
+        private void Server_ClientDisconnected(object sender, TCPDll.Server.EventArgs.ClientDisconnectedEventArgs e)
+        {
+            MultithreadConsole.WriteLine($"Client: {e.User.Username} disconnected");
+        }
+
+        private void Server_OperationMessage(object sender, TCPDll.Server.EventArgs.OperationMessageEventArgs e)
+        {
+            MultithreadConsole.WriteLine($"Operation: {e.Message}");
         }
     }
 }

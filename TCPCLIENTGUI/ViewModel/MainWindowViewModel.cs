@@ -89,7 +89,7 @@ namespace TCPClientGUI.ViewModel
                 Task taskSendFile = new Task(() =>
                 {
                     int operationId = User.GenerateOperationId();
-                    IClientOperation clientOperation = new SendFileToServerOperation(User, operationId, file, filenamePart[filenamePart.Length - 1]);
+                    IOperation clientOperation = new SendFileToServerOperation(User, operationId, file, filenamePart[filenamePart.Length - 1]);
                     User.Operations.Add(new Operation() { ID = operationId, OperationTask = clientOperation });
                     clientOperation.Init();
                 });

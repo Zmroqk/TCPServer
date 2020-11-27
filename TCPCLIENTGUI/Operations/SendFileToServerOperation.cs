@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TCPDll;
+using TCPDll.Tools.Extensions;
 
 namespace TCPClientGUI.Operations
 {
-    public class SendFileToServerOperation : IClientOperation
+    public class SendFileToServerOperation : IOperation
     {
 
         User User { get; set; }

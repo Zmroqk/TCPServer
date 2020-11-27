@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using TCPDll;
+using TCPDll.Tools.Extensions;
 
 namespace TCPDll.Server.Operations
 {
     /// <summary>
     /// GET user data (username) SERVER SIDE
     /// </summary>
-    public class ClientDataOperation : IClientOperation
+    public class ClientDataOperation : IOperation
     {
         /// <summary>
         /// User for this operation
@@ -50,7 +51,8 @@ namespace TCPDll.Server.Operations
                 $"{Headers.HeaderOperationType}: {Headers.OperationTypeGetUsername}";
             byte[] header = new byte[Headers.BufferSize];                     
             byte[] headerStringBytes = Encoding.UTF8.GetBytes(headerString);
-            Headers.Fill(ref header, Headers.PacketTypeHeader, OperationId, ref headerStringBytes);
+            header.Fill(Headers.PacketTypeHeader, OperationId, ref headerStringBytes);
+            //Headers.Fill(ref header, Headers.PacketTypeHeader, OperationId, ref headerStringBytes);
             User.ClientSocket.Send(header);
         }
 
