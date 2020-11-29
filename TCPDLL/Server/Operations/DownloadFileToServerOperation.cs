@@ -8,6 +8,8 @@ using TCPDll;
 using System.Timers;
 using TCPDll.Tools;
 using TCPDll.Server.EventArgs;
+using TCPDll.EventArgs;
+using System.Linq;
 
 namespace TCPDll.Server.Operations
 {
@@ -23,7 +25,8 @@ namespace TCPDll.Server.Operations
         FileStream FileStream { get; set; }
         FileDownloader FileDownloader { get; set; }
         StringBuilder FilenameBuilder { get; set; }
-        EventHandler<OperationMessageEventArgs> MessageHandler { get; set; }
+        //EventHandler<OperationMessageEventArgs> MessageHandler { get; set; }
+        public event EventHandler<OperationStatusChangedEventArgs> StatusChanged;
         //Timer TimerForDebugInfo { get; set; }
 
         public DownloadFileToServerOperation(User user, int operationId, EventHandler<OperationMessageEventArgs> messageHandler = null)
@@ -36,14 +39,14 @@ namespace TCPDll.Server.Operations
             OperationStep = 0;
             Filename = "";
             FilenameBuilder = new StringBuilder();
-            MessageHandler = messageHandler;
-        }
+            //MessageHandler = messageHandler;
+        }       
 
         public void EndOperation()
         {
             string headerString = $"{Headers.HeaderContent}: {Headers.TypeEndOperation}";
             byte[] header = Headers.CreateHeader(OperationId, headerString);
-            User.Client.Client.Send(header);
+            User.Send(ref header);
         }
 
         public void Init()
@@ -99,7 +102,7 @@ namespace TCPDll.Server.Operations
                     TimerForDebugInfo.Dispose();
                     TimerForDebugInfo = null;
                 }*/
-                User.Operations.RemoveAll((op) => op.ID == OperationId);            
+                User.Operations.Remove(User.Operations.FirstOrDefault((op) => op.ID == OperationId));            
             }
             else
             {
@@ -140,18 +143,21 @@ namespace TCPDll.Server.Operations
             FileDownloader.FileDownloaded += FileDownloader_FileDownloaded;
             FileDownloader.PropertyChanged += FileDownloader_PropertyChanged;
             FileDownloader.Init();
+            StatusChanged?.Invoke(this, new OperationStatusChangedEventArgs("Download initialized."));
         }
 
         private void FileDownloader_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            MessageHandler?.Invoke(this, new OperationMessageEventArgs(this, FileDownloader.DownloadSpeed.ToString("F3")));
+            //MessageHandler?.Invoke(this, new OperationMessageEventArgs(this, FileDownloader.DownloadSpeed.ToString("F3")));
+            StatusChanged?.Invoke(this, new OperationStatusChangedEventArgs($"Download speed: {FileDownloader.DownloadSpeed}", FileDownloader.DownloadSpeed));
         }
 
         private void FileDownloader_FileDownloaded(object sender, FileDownloadEventArgs e)
         {
             FileDownloader.Dispose();
             EndOperation();
-            User.Operations.RemoveAll((op) => op.ID == OperationId);
+            StatusChanged?.Invoke(this, new OperationStatusChangedEventArgs("Download completed."));
+            User.Operations.Remove(User.Operations.FirstOrDefault((op) => op.ID == OperationId));
             FileDownloader = null;
         }
 
@@ -159,7 +165,7 @@ namespace TCPDll.Server.Operations
         {
             string headerString = $"{Headers.HeaderContent}: {Headers.TypeProceed}";
             byte[] header = Headers.CreateHeader(OperationId, headerString);
-            User.Client.Client.Send(header);
+            User.Send(ref header);
         }
     }
 }

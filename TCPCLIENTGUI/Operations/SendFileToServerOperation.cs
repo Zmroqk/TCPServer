@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TCPDll;
+using TCPDll.EventArgs;
 using TCPDll.Tools.Extensions;
 
 namespace TCPClientGUI.Operations
-{
+{ 
     public class SendFileToServerOperation : IOperation
     {
 
@@ -18,6 +19,8 @@ namespace TCPClientGUI.Operations
         string FilenameRelative { get; set; }
         FileStream FileStream { get; set; }
         TaskCompletionSource<bool> TaskContinue;
+
+        public event EventHandler<OperationStatusChangedEventArgs> StatusChanged;
 
         public SendFileToServerOperation(User user, int operationId, string filename, string filenameRelative)
         {
@@ -39,7 +42,7 @@ namespace TCPClientGUI.Operations
                $"{Headers.HeaderOperationId}: {OperationId}\n" +
                $"{Headers.HeaderOperationType}: {Headers.OperationTypeSendFile}";
             byte[] header = Headers.CreateHeader(OperationId, headerString);
-            User.ClientSocket.Send(header);
+            User.Send(ref header);
             TaskContinue.Task.Wait();
             SendHeader();
             TaskContinue.Task.Wait();
@@ -65,7 +68,7 @@ namespace TCPClientGUI.Operations
                     TaskContinue = new TaskCompletionSource<bool>();
                     break;
                 case Headers.TypeEndOperation:
-                    User.Operations.RemoveAll((op) => op.ID == OperationId);
+                    User.Operations.Remove(User.Operations.First((op) => op.ID == OperationId));
                     break;
             }
             
@@ -76,7 +79,7 @@ namespace TCPClientGUI.Operations
             byte[] data;
             while((data = Headers.CreateDataPacket(FileStream, OperationId)).Length != 0)
             {
-                User.ClientSocket.Send(data);
+                User.Send(ref data);
                 TaskContinue.Task.Wait();
             }           
         }
@@ -86,7 +89,7 @@ namespace TCPClientGUI.Operations
             string headerString = $"{Headers.HeaderContent}: {Headers.TypeString}\n" +
               $"{Headers.HeaderDataLength}: {Encoding.UTF8.GetBytes(FilenameRelative).Length}\n";
             byte[] header = Headers.CreateHeader(OperationId, headerString);
-            User.ClientSocket.Send(header);
+            User.Send(ref header);
 
             TaskContinue.Task.Wait();
 
@@ -101,12 +104,12 @@ namespace TCPClientGUI.Operations
                     data.FillHeader(Headers.PacketTypeData, OperationId);
                     data.FillData(ref filename, dataAlreadySend, Headers.SizeDifferential);
                     dataAlreadySend += Headers.SizeDifferential;
-                    User.ClientSocket.Send(data);
+                    User.Send(ref data);
                 }
             }
             data = new byte[filename.Length + Headers.HeaderSize];
             data.Fill(Headers.PacketTypeData, OperationId, ref filename);
-            User.ClientSocket.Send(data);
+            User.Send(ref data);
         }
         public void SendSecondHeader()
         {
@@ -114,7 +117,7 @@ namespace TCPClientGUI.Operations
             string headerString = $"{Headers.HeaderContent}: {Headers.TypeFile}\n" +
               $"{Headers.HeaderDataLength}: {FileStream.Length}\n";
             byte[] header = Headers.CreateHeader(OperationId, headerString);
-            User.ClientSocket.Send(header);
+            User.Send(ref header);
         }
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
 using System.Net;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace TCPDll
 {
@@ -42,13 +44,14 @@ namespace TCPDll
         /// <summary>
         /// List of operations
         /// </summary>
-        public List<Operation> Operations { get; set; }
+        public ObservableCollection<Operation> Operations { get; set; }
 
-        object lockState;
+        object lockReceiveState; 
+        object lockSendState;
         /// <summary>
         /// Current downloaded data
         /// </summary>
-        byte[] data;
+        byte[] dataBuffer;
 
         /// <summary>
         /// Default constructor
@@ -56,8 +59,9 @@ namespace TCPDll
         public User()
         {
             Client = new TcpClient();
-            Operations = new List<Operation>();
-            lockState = new object();
+            Operations = new ObservableCollection<Operation>();
+            lockReceiveState = new object();
+            lockSendState = new object();
         }
 
         /// <summary>
@@ -65,7 +69,7 @@ namespace TCPDll
         /// </summary>
         public void StartReceiveData()
         {
-            data = new byte[Headers.BufferSize];
+            dataBuffer = new byte[Headers.BufferSize];
             BeginReceive();
         }
 
@@ -80,8 +84,19 @@ namespace TCPDll
             do
             {
                 id = random.Next();
-            } while (this.Operations.Find((op) => op.ID == id) != null);
+            } while (this.Operations.FirstOrDefault((op) => op.ID == id) != null);
             return id;
+        }
+
+        /// <summary>
+        /// Send data through user socket
+        /// </summary>
+        /// <param name="data">Data to send</param>
+        public void Send(ref byte[] data) {
+            lock (lockSendState)
+            {
+                ClientSocket.Send(data);
+            }           
         }
 
         /// <summary>
@@ -89,8 +104,8 @@ namespace TCPDll
         /// </summary>
         void ClearBuffer()
         {          
-            for (int i = 0; i < data.Length; i++) {
-                data[i] = 0;
+            for (int i = 0; i < dataBuffer.Length; i++) {
+                dataBuffer[i] = 0;
             }
         }
 
@@ -99,14 +114,14 @@ namespace TCPDll
         /// </summary>
         public void BeginReceive()
         {
-            ClientSocket.BeginReceive(data, 0, Headers.BufferSize, SocketFlags.None, DataReceived, null);
+            ClientSocket.BeginReceive(dataBuffer, 0, Headers.BufferSize, SocketFlags.None, DataReceived, null);
         }
 
         /// <summary>
         /// Process data as raw data
         /// </summary>
         /// <param name="operation">Operation to which data belongs</param>
-        void ProcessData(Operation operation)
+        void ProcessData(ref byte[] data, Operation operation)
         {
             if (operation != null)
             {
@@ -131,7 +146,7 @@ namespace TCPDll
         /// </summary>
         /// <param name="dataReceived">Size of data received</param>
         /// <param name="operation">Operation to which data belongs</param>
-        void ProcessHeaderData(int dataReceived, Operation operation)
+        void ProcessHeaderData(ref byte[] data, int dataReceived, Operation operation)
         {
             string headerString = Encoding.UTF8.GetString(data, Headers.HeaderSize, dataReceived - Headers.HeaderSize);
             Dictionary<string, string> headers = new Dictionary<string, string>();
@@ -168,7 +183,8 @@ namespace TCPDll
         /// <param name="asyncResult">Result of BeginReceive()</param>
         void DataReceived(IAsyncResult asyncResult)
         {
-            lock (lockState)
+            byte[] data = (byte[])dataBuffer.Clone();
+            lock (lockReceiveState)
             {
                 try
                 {
@@ -178,10 +194,10 @@ namespace TCPDll
                         return;
                     }
                     int dataReceived = ClientSocket.EndReceive(asyncResult);
+                    ClearBuffer();
+                    BeginReceive();
                     if (dataReceived < Headers.HeaderSize)
                     {
-                        ClearBuffer();
-                        BeginReceive();
                         return;
                     }
                     char typeOfPacket = (char)data[0];
@@ -191,17 +207,16 @@ namespace TCPDll
                         Id[i - 1] = data[i];
                     }
                     int operationId = BitConverter.ToInt32(Id, 0);
-                    Operation operation = Operations.Find((op) => op.ID == operationId);
+                    Operation operation = Operations.FirstOrDefault((op) => op.ID == operationId);
                     if (typeOfPacket == Headers.PacketTypeData)
                     {
-                        ProcessData(operation);
+                        ProcessData(ref data, operation);
                     }
                     else if (typeOfPacket == Headers.PacketTypeHeader)
                     {
-                        ProcessHeaderData(dataReceived, operation);
+                        ProcessHeaderData(ref data, dataReceived, operation);
                     }
-                    ClearBuffer();
-                    BeginReceive();
+                    
                 }
                 catch (Exception e)
                 {

@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TCPDll.Server.EventArgs;
 using TCPDll.Server.Operations;
+using System.Collections.ObjectModel;
 
 namespace TCPDll.Server
 {
@@ -23,7 +24,7 @@ namespace TCPDll.Server
         /// <summary>
         /// Connected clients
         /// </summary>
-        List<User> Clients { get; set; }
+        public ObservableCollection<User> Clients { get; private set; }
 
         /// <summary>
         /// Ocurrs when server closes
@@ -38,7 +39,7 @@ namespace TCPDll.Server
         /// <summary>
         /// Ocurrs when one of operations sends message
         /// </summary>
-        public event EventHandler<OperationMessageEventArgs> OperationMessage;
+        //public event EventHandler<OperationMessageEventArgs> OperationMessage;
 
         /// <summary>
         /// Ocurrs when one of operations sends message
@@ -50,7 +51,7 @@ namespace TCPDll.Server
         /// </summary>
         public Server()
         {
-            Clients = new List<User>();
+            Clients = new ObservableCollection<User>();
         }
 
         /// <summary>
@@ -142,7 +143,7 @@ namespace TCPDll.Server
         /// <param name="e">Headers for request</param>
         private void NewUser_onNewOperation(object sender, Dictionary<string, string> e)
         {
-            OperationDispatcher operationDispatcher = new OperationDispatcher((User)sender, e, OperationMessage);
+            OperationDispatcher operationDispatcher = new OperationDispatcher((User)sender, e, null);
             operationDispatcher.Dispatch();
         }
 
@@ -153,7 +154,7 @@ namespace TCPDll.Server
         /// <param name="message">Cause of disconnection</param>
         void OnClientDisconnect(object sender, string message)
         {
-            User user = (User)sender;
+            User user = (User)sender;        
             Clients.Remove(user);
             ClientDisconnected?.Invoke(this, new ClientDisconnectedEventArgs(user, message));
         }

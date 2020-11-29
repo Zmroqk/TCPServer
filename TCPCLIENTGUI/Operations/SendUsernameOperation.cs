@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using TCPDll;
+using TCPDll.EventArgs;
 using TCPDll.Tools.Extensions;
+using System.Linq;
+
 
 namespace TCPClientGUI.Operations
 {
@@ -18,6 +21,8 @@ namespace TCPClientGUI.Operations
             OperationId = operationId;
             Username = username;
         }
+
+        public event EventHandler<OperationStatusChangedEventArgs> StatusChanged;
 
         public void SendData()
         {
@@ -67,7 +72,7 @@ namespace TCPClientGUI.Operations
             int operationId;
             if (int.TryParse(content, out operationId) && operationId == OperationId)
             {
-                User.Operations.RemoveAll((op) => op.OperationTask == this);
+                User.Operations.Remove(User.Operations.First((op) => op.OperationTask == this));
             }
         }
 

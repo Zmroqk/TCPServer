@@ -103,7 +103,7 @@ namespace TCPDll
         public static byte[] CreateHeader(int operationId, string headerString)
         {
             byte[] headerStringBytes = Encoding.UTF8.GetBytes(headerString);
-            byte[] header = new byte[HeaderSize + headerStringBytes.Length];
+            byte[] header = new byte[BufferSize];
             header.Fill(PacketTypeHeader, operationId, ref headerStringBytes);
             return header;
         }

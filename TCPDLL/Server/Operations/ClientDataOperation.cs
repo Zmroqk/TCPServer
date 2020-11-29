@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using TCPDll;
+using TCPDll.EventArgs;
 using TCPDll.Tools.Extensions;
+using System.Linq;
 
 namespace TCPDll.Server.Operations
 {
@@ -41,6 +43,8 @@ namespace TCPDll.Server.Operations
             OperationId = operationId;
             stringBuilder = new StringBuilder();
         }
+
+        public event EventHandler<OperationStatusChangedEventArgs> StatusChanged;
 
         /// <summary>
         /// Init this operation, Send header Create-Operation
@@ -106,9 +110,10 @@ namespace TCPDll.Server.Operations
                 $"{Headers.HeaderOperationId}: {OperationId}";
             byte[] header = new byte[Headers.BufferSize];
             byte[] headerStringBytes = Encoding.UTF8.GetBytes(headerString);
-            Headers.Fill(ref header, Headers.PacketTypeHeader, OperationId, ref headerStringBytes);
+            //Headers.Fill(ref header, Headers.PacketTypeHeader, OperationId, ref headerStringBytes);
+            header.Fill(Headers.PacketTypeHeader, OperationId, ref headerStringBytes);
             User.ClientSocket.Send(header);
-            User.Operations.RemoveAll((op) => op.OperationTask == this);
+            User.Operations.Remove(User.Operations.FirstOrDefault((op) => op.OperationTask == this));
         }
 
 
